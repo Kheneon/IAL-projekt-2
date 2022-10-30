@@ -32,6 +32,9 @@ int get_hash(char *key) {
  * Inicializácia tabuľky — zavolá sa pred prvým použitím tabuľky.
  */
 void ht_init(ht_table_t *table) {
+  for(int i = 0; i < HT_SIZE; i++){
+    (*table)[i] = 0;
+  }
 }
 
 /*
@@ -41,6 +44,14 @@ void ht_init(ht_table_t *table) {
  * hodnotu NULL.
  */
 ht_item_t *ht_search(ht_table_t *table, char *key) {
+  int index = get_hash(key);
+  ht_item_t *htab_item = (*table)[index];
+  while(htab_item != NULL){
+    if(strcmp(htab_item->key,key) == 0){
+      return htab_item;
+    }
+    htab_item = htab_item->next;
+  }
   return NULL;
 }
 
@@ -53,6 +64,26 @@ ht_item_t *ht_search(ht_table_t *table, char *key) {
  * synonym zvoľte najefektívnejšiu možnosť a vložte prvok na začiatok zoznamu.
  */
 void ht_insert(ht_table_t *table, char *key, float value) {
+  ht_item_t *new_ht_item = ht_search(table, key);
+  if(new_ht_item != NULL){
+    new_ht_item->value = value;
+    return;
+  }
+  
+  // Pokud nebyla polozka nalezena
+  int index = get_hash(key);
+  new_ht_item = malloc(sizeof(struct ht_item));
+  if(new_ht_item == NULL){
+    exit(1);
+  }
+  new_ht_item->key = malloc((strlen(key)+1) * sizeof(char));
+  if(new_ht_item->key == NULL){
+    exit(1);
+  }
+  strcpy(new_ht_item->key,key);
+  new_ht_item->value = value;
+  new_ht_item->next = (*table)[index];
+  (*table)[index] = new_ht_item;
 }
 
 /*
@@ -64,6 +95,11 @@ void ht_insert(ht_table_t *table, char *key, float value) {
  * Pri implementácii využite funkciu ht_search.
  */
 float *ht_get(ht_table_t *table, char *key) {
+  ht_item_t *new_ht_item = ht_search(table,key);
+  if(new_ht_item != NULL){
+    return &(new_ht_item->value);
+  }
+  
   return NULL;
 }
 
@@ -76,6 +112,20 @@ float *ht_get(ht_table_t *table, char *key) {
  * Pri implementácii NEVYUŽÍVAJTE funkciu ht_search.
  */
 void ht_delete(ht_table_t *table, char *key) {
+  int index = get_hash(key);
+  ht_item_t *new_ht_item = (*table)[index];
+  ht_item_t *old_ht_item = (*table)[index];
+  while(new_ht_item != NULL){
+    if(strcmp(new_ht_item->key,key) == 0){
+      //Nasli jsme klic, odstranime cely item
+      old_ht_item = new_ht_item->next;
+      free(new_ht_item->key);
+      free(new_ht_item);
+      return;
+    }
+    old_ht_item = new_ht_item;
+    new_ht_item = new_ht_item->next;
+  }
 }
 
 /*
