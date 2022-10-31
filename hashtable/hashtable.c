@@ -115,10 +115,19 @@ void ht_delete(ht_table_t *table, char *key) {
   int index = get_hash(key);
   ht_item_t *new_ht_item = (*table)[index];
   ht_item_t *old_ht_item = (*table)[index];
+  // Jestli je to hned prvni item, musime postupovat jinak
+  if(new_ht_item != NULL && strcmp(new_ht_item->key,key) == 0){
+    (*table)[index] = new_ht_item->next;
+    free(new_ht_item->key);
+    free(new_ht_item);
+    return;
+  }
+  //new_ht_item = new_ht_item->next;
+
   while(new_ht_item != NULL){
     if(strcmp(new_ht_item->key,key) == 0){
       //Nasli jsme klic, odstranime cely item
-      old_ht_item = new_ht_item->next;
+      old_ht_item->next = new_ht_item->next;
       free(new_ht_item->key);
       free(new_ht_item);
       return;
@@ -135,4 +144,14 @@ void ht_delete(ht_table_t *table, char *key) {
  * inicializácii.
  */
 void ht_delete_all(ht_table_t *table) {
+  ht_item_t *record;
+  ht_item_t *next;
+  for(int i = 0; i < HT_SIZE; i++){
+    while((*table)[i] != NULL){
+      next = (*table)[i]->next;
+      free((*table)[i]->key);
+      free((*table)[i]);
+      (*table)[i] = next;
+    }
+  }
 }
