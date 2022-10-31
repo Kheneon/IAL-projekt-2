@@ -32,8 +32,10 @@ int get_hash(char *key) {
  * Inicializácia tabuľky — zavolá sa pred prvým použitím tabuľky.
  */
 void ht_init(ht_table_t *table) {
-  for(int i = 0; i < HT_SIZE; i++){
-    (*table)[i] = 0;
+  if(table != NULL){
+    for(int i = 0; i < HT_SIZE; i++){
+      (*table)[i] = 0;
+    }
   }
 }
 
@@ -44,13 +46,15 @@ void ht_init(ht_table_t *table) {
  * hodnotu NULL.
  */
 ht_item_t *ht_search(ht_table_t *table, char *key) {
-  int index = get_hash(key);
-  ht_item_t *htab_item = (*table)[index];
-  while(htab_item != NULL){
-    if(strcmp(htab_item->key,key) == 0){
-      return htab_item;
+  if(table != NULL && key != NULL){
+    int index = get_hash(key);
+    ht_item_t *htab_item = (*table)[index];
+    while(htab_item != NULL){
+      if(strcmp(htab_item->key,key) == 0){
+        return htab_item;
+      }
+      htab_item = htab_item->next;
     }
-    htab_item = htab_item->next;
   }
   return NULL;
 }
@@ -144,7 +148,6 @@ void ht_delete(ht_table_t *table, char *key) {
  * inicializácii.
  */
 void ht_delete_all(ht_table_t *table) {
-  ht_item_t *record;
   ht_item_t *next;
   for(int i = 0; i < HT_SIZE; i++){
     while((*table)[i] != NULL){
