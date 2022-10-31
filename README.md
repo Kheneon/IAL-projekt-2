@@ -1,3 +1,3 @@
 # IAL-projekt-2
 
-lol
+hodnocení X/10
