@@ -48,6 +48,33 @@ bool bst_search(bst_node_t *tree, char key, int *value) {
  * Funkciu implementujte iteratívne bez použitia vlastných pomocných funkcií.
  */
 void bst_insert(bst_node_t **tree, char key, int value) {
+  bst_node_t *item_ptr = *tree, *item_ptr_father = NULL;
+  while(item_ptr != NULL){
+    item_ptr_father = item_ptr;
+    if(item_ptr->key == key){
+      item_ptr->value = value;
+      return;
+    } else if(item_ptr->key > key){
+      item_ptr = item_ptr->left;
+    } else {
+      item_ptr = item_ptr->right;
+    }
+  }
+  
+  item_ptr = malloc(sizeof(struct bst_node));
+  if(item_ptr == NULL){
+    fprintf(stderr,"bst_insert: MALLOC FAILURE\n");
+    exit(1);
+  }
+  item_ptr->key = key;
+  item_ptr->value = value;
+  if(item_ptr_father == NULL){
+    *tree = item_ptr;
+  } else if(item_ptr_father->key > key){
+    item_ptr_father->left = item_ptr;
+  } else {
+    item_ptr_father->right = item_ptr;
+  }
 }
 
 
