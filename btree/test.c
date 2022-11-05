@@ -47,6 +47,7 @@ bst_init(&test_tree);
 bst_insert(&test_tree, 'H', 1);
 int result;
 bst_search(test_tree, 'H', &result);
+printf("found: %d\n", result); //TODO:
 bst_print_tree(test_tree);
 ENDTEST
 

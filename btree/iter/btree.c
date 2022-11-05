@@ -33,6 +33,17 @@ void bst_init(bst_node_t **tree) {
  * Funkciu implementujte iteratívne bez použitia vlastných pomocných funkcií.
  */
 bool bst_search(bst_node_t *tree, char key, int *value) {
+  bst_node_t *item_ptr = tree;
+  while(item_ptr != NULL){
+    if(item_ptr->key == key){
+      *value = item_ptr->value;
+      return true;
+    } else if(item_ptr->key > key){
+      item_ptr = item_ptr->left;
+    } else {
+      item_ptr = item_ptr->right;
+    }
+  }
   return false;
 }
 
