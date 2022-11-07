@@ -12,6 +12,12 @@
 #include <stdlib.h>
 
 /*
+stack_bst_t *stack;
+stack = malloc(sizeof(stack_bst_t));
+stack_bst_init(stack);
+*/
+
+/*
  * Inicializácia stromu.
  *
  * Užívateľ musí zaistiť, že incializácia sa nebude opakovane volať nad
@@ -103,6 +109,55 @@ void bst_insert(bst_node_t **tree, char key, int value) {
  * Funkciu implementujte iteratívne bez použitia vlastných pomocných funkcií.
  */
 void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
+  bst_node_t *item_ptr;
+  item_ptr = target;
+  stack_bst_t stack;
+  stack_bst_init(&stack);
+
+  // Jdeme hledat do leveho podstromu
+  if(item_ptr->left != NULL){
+    //Levy syn existuje
+    item_ptr = item_ptr->left;
+  } else {
+    // Neni zadny levy syn neexistuje
+    if(target->right != NULL){
+      // Pravy syn existuje, muzeme pokracovat nahrazovanim
+      item_ptr = item_ptr->right;
+      target->key = target->right->key;
+      target->value = target->right->value;
+      target->right = target->right->right;
+      target->left = target->right->left;
+      free(item_ptr);
+    } else {
+      // Zadny syn neexistuje, pouze rusime target
+      free(target);
+      return;
+    }
+  }
+
+  // Pushneme si syny ruseneho uzlu
+  stack_bst_push(&stack,target->left);
+  stack_bst_push(&stack,target->right); //Z: ..., T->L, T->R
+
+  // Hledame nejpravejsi uzel leveho podstromu
+  while(item_ptr->right != NULL){
+    if(item_ptr->right->right == NULL){
+      // Dalsi pravy syn po pravem synovi je NULL
+      stack_bst_push(&stack,item_ptr->right); //Z: ..., T->L, T->R, XXXX
+      item_ptr->right = item_ptr->right->left;
+    }
+    item_ptr = item_ptr->right;
+  }
+
+  // Nahrazujeme target
+  target->key = (&stack)->items[(&stack)->top]->key;
+  target->value = (&stack)->items[(&stack)->top]->value;
+  item_ptr = stack_bst_pop(&stack); //Z: ..., T->L, T->R
+  free(item_ptr);
+  item_ptr = stack_bst_pop(&stack); //Z: ..., T->L
+  target->right = item_ptr;
+  item_ptr = stack_bst_pop(&stack); //Z: ...
+  target->left = item_ptr;
 }
 
 /*
@@ -118,6 +173,7 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
  * použitia vlastných pomocných funkcií.
  */
 void bst_delete(bst_node_t **tree, char key) {
+
 }
 
 /*
@@ -143,6 +199,7 @@ void bst_dispose(bst_node_t **tree) {
  * vlastných pomocných funkcií.
  */
 void bst_leftmost_preorder(bst_node_t *tree, stack_bst_t *to_visit) {
+
 }
 
 /*
@@ -154,6 +211,14 @@ void bst_leftmost_preorder(bst_node_t *tree, stack_bst_t *to_visit) {
  * zásobníku uzlov bez použitia vlastných pomocných funkcií.
  */
 void bst_preorder(bst_node_t *tree) {
+  /*stack_bst_t *stack;
+  stack_bst_init(stack);
+  bst_node_t *record;
+  record = tree;
+  while(record != NULL){
+    bst_print_node(record); // Tisk aktualne zpracovavaneho prvku
+
+  }*/
 }
 
 /*
