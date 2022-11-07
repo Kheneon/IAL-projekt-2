@@ -129,8 +129,7 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
       target->left = target->right->left;
       free(item_ptr);
     } else {
-      // Zadny syn neexistuje, pouze rusime target
-      free(target);
+      // Zadny syn neexistuje, nic nerusime
       return;
     }
   }
@@ -173,7 +172,45 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
  * použitia vlastných pomocných funkcií.
  */
 void bst_delete(bst_node_t **tree, char key) {
+  bst_node_t *item_ptr = *tree, *item_ptr_next = *tree;
 
+  while(item_ptr_next != NULL){
+    if(item_ptr_next->key == key){
+      if(item_ptr_next->right == NULL && item_ptr_next->left == NULL){
+        // Jestli nicime strom jen s otcovskym uzlem
+        if(*tree == item_ptr_next){
+          free(item_ptr_next);
+          *tree = NULL;
+          break;
+        }
+        
+        // Pokud nicime vpravo od otce
+        if(item_ptr->right == item_ptr_next){
+          item_ptr->right = NULL;
+          free(item_ptr_next);
+          break;
+        }
+        
+        // Pokud nicime vlevo od otce
+        if(item_ptr->left == item_ptr_next){
+          item_ptr->left = NULL;
+          free(item_ptr_next);
+          break;
+        }
+
+      }
+
+      bst_replace_by_rightmost(item_ptr_next,tree);
+
+    } else if(item_ptr_next->key > key){
+      item_ptr = item_ptr_next;
+      item_ptr_next = item_ptr_next->left;
+    } else {
+      item_ptr = item_ptr_next;
+      item_ptr_next = item_ptr_next->right;
+    }
+
+  }
 }
 
 /*
@@ -187,6 +224,7 @@ void bst_delete(bst_node_t **tree, char key) {
  * vlastných pomocných funkcií.
  */
 void bst_dispose(bst_node_t **tree) {
+  
 }
 
 /*

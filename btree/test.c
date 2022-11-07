@@ -69,15 +69,19 @@ TEST(test_tree_search, "Search for an item deeper in the tree (A)")
 bst_init(&test_tree);
 bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
 int result;
-bst_search(test_tree, 'A', &result);
+bool yesno;
+yesno = bst_search(test_tree, 'A', &result);
+printf("found: %d\n", yesno); //TODO:
 bst_print_tree(test_tree);
 ENDTEST
 
 TEST(test_tree_search_missing, "Search for a missing key (X)")
 bst_init(&test_tree);
 bst_insert_many(&test_tree, base_keys, base_values, base_data_count);
-int result;
-bst_search(test_tree, 'X', &result);
+int result; //TODO:
+bool yesno;
+yesno = bst_search(test_tree, 'X', &result);
+printf("found: %d\n", yesno); //TODO:
 bst_print_tree(test_tree);
 ENDTEST
 
