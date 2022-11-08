@@ -85,6 +85,8 @@ void bst_insert(bst_node_t **tree, char key, int value) {
   }
   item_ptr->key = key;
   item_ptr->value = value;
+  item_ptr->right = NULL;
+  item_ptr->left = NULL;
   if(item_ptr_father == NULL){
     *tree = item_ptr;
   } else if(item_ptr_father->key > key){
@@ -110,53 +112,58 @@ void bst_insert(bst_node_t **tree, char key, int value) {
  */
 void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
   bst_node_t *item_ptr;
-  item_ptr = target;
   stack_bst_t stack;
   stack_bst_init(&stack);
 
-  // Jdeme hledat do leveho podstromu
-  if(item_ptr->left != NULL){
-    //Levy syn existuje
-    item_ptr = item_ptr->left;
-  } else {
-    // Neni zadny levy syn neexistuje
-    if(target->right != NULL){
-      // Pravy syn existuje, muzeme pokracovat nahrazovanim
-      item_ptr = item_ptr->right;
-      target->key = target->right->key;
-      target->value = target->right->value;
-      target->right = target->right->right;
-      target->left = target->right->left;
-      free(item_ptr);
+  if(target->left == NULL){
+    // Neexistuji oba synove
+    if(target->right == NULL){
+      return;
+    
+    // Neexistuje pouze levy syn
     } else {
-      // Zadny syn neexistuje, nic nerusime
+      item_ptr = target->right;
+      target->key = item_ptr->key;
+      target->value = item_ptr->value;
+      target->left = item_ptr->left;
+      target->right = item_ptr->right;
+      free(item_ptr);
       return;
     }
+  // Neexistuje pouze pravy syn
+  } else if(target->right == NULL){
+    item_ptr = target->left;
+    target->key = item_ptr->key;
+    target->value = item_ptr->value;
+    target->left = item_ptr->left;
+    target->right = item_ptr->right;
+    free(item_ptr);
+    return;
   }
 
-  // Pushneme si syny ruseneho uzlu
-  stack_bst_push(&stack,target->left);
-  stack_bst_push(&stack,target->right); //Z: ..., T->L, T->R
+  // Existuji oba synove
+  item_ptr = target->left;
+  stack_bst_push(&stack,target);
 
-  // Hledame nejpravejsi uzel leveho podstromu
-  while(item_ptr->right != NULL){
-    if(item_ptr->right->right == NULL){
-      // Dalsi pravy syn po pravem synovi je NULL
-      stack_bst_push(&stack,item_ptr->right); //Z: ..., T->L, T->R, XXXX
-      item_ptr->right = item_ptr->right->left;
-    }
+  // Nalezeni nejpravejsiho syna
+  // Po vykonani na vrcholu zasobniku ukazatel na uzel, kterym budeme nahrazovat target
+  while(item_ptr != NULL){
+    stack_bst_push(&stack,item_ptr);
     item_ptr = item_ptr->right;
   }
 
+  // Na item_ptr se nachazi ukazatel na uzel, kterym budeme nahrazovat target
+  item_ptr = stack_bst_pop(&stack);
+
+  // Leveho potomka uzlu, kterym budeme nahrazovat target, priradime jeho otci
+  (&stack)->items[(&stack)->top]->right = item_ptr->left;
+
   // Nahrazujeme target
-  target->key = (&stack)->items[(&stack)->top]->key;
-  target->value = (&stack)->items[(&stack)->top]->value;
-  item_ptr = stack_bst_pop(&stack); //Z: ..., T->L, T->R
+  target->key = item_ptr->key;
+  target->value = item_ptr->value;
+
+  // Uvolnime item_ptr
   free(item_ptr);
-  item_ptr = stack_bst_pop(&stack); //Z: ..., T->L
-  target->right = item_ptr;
-  item_ptr = stack_bst_pop(&stack); //Z: ...
-  target->left = item_ptr;
 }
 
 /*
@@ -172,44 +179,37 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
  * použitia vlastných pomocných funkcií.
  */
 void bst_delete(bst_node_t **tree, char key) {
-  bst_node_t *item_ptr = *tree, *item_ptr_next = *tree;
+  bst_node_t *item_ptr = *tree, *ptr = NULL;
+  stack_bst_t stack;
+  stack_bst_init(&stack);
 
-  while(item_ptr_next != NULL){
-    if(item_ptr_next->key == key){
-      if(item_ptr_next->right == NULL && item_ptr_next->left == NULL){
-        // Jestli nicime strom jen s otcovskym uzlem
-        if(*tree == item_ptr_next){
-          free(item_ptr_next);
-          *tree = NULL;
-          break;
+  while(item_ptr != NULL){
+    stack_bst_push(&stack,item_ptr);
+    
+    // Klic nalezen
+    if(item_ptr->key == key){
+      bst_replace_by_rightmost(item_ptr,tree);
+      
+      // Jestli byl uzel opravdu odstranen
+      if(item_ptr->key == key){
+        ptr = stack_bst_pop(&stack);
+        ptr = stack_bst_pop(&stack); // Nyni si v ptr nachazi otec niceneho uzlu
+        if(ptr->right == item_ptr){ // Niceny prvek se nachazi v pravem synovi
+          ptr->right = NULL;
+          free(item_ptr);
+        } else {
+          ptr->left = NULL;
+          free(item_ptr);
         }
-        
-        // Pokud nicime vpravo od otce
-        if(item_ptr->right == item_ptr_next){
-          item_ptr->right = NULL;
-          free(item_ptr_next);
-          break;
-        }
-        
-        // Pokud nicime vlevo od otce
-        if(item_ptr->left == item_ptr_next){
-          item_ptr->left = NULL;
-          free(item_ptr_next);
-          break;
-        }
-
       }
+      return;
 
-      bst_replace_by_rightmost(item_ptr_next,tree);
-
-    } else if(item_ptr_next->key > key){
-      item_ptr = item_ptr_next;
-      item_ptr_next = item_ptr_next->left;
+    //Klic nenalezen, pokracujeme dale ve strome
+    } else if(item_ptr->key > key){
+      item_ptr = item_ptr->left;
     } else {
-      item_ptr = item_ptr_next;
-      item_ptr_next = item_ptr_next->right;
+      item_ptr = item_ptr->right;
     }
-
   }
 }
 
@@ -224,7 +224,41 @@ void bst_delete(bst_node_t **tree, char key) {
  * vlastných pomocných funkcií.
  */
 void bst_dispose(bst_node_t **tree) {
-  
+  bst_node_t *item_ptr;
+  item_ptr = *tree;
+  stack_bst_t stack;
+  stack_bst_init(&stack);
+
+  while(*tree != NULL){
+    stack_bst_push(&stack,item_ptr);
+    
+    // Existuje levy syn
+    if(item_ptr->left != NULL){
+      item_ptr = item_ptr->left;
+
+    // Existuje pravy syn
+    } else if(item_ptr->right != NULL){
+      item_ptr = item_ptr->right;
+    
+    // Uz neexistuje zadny syn a jsme u ukazatele na koren
+    } else if(item_ptr == *tree){
+      free(item_ptr);
+      *tree = NULL;
+    
+    // Uvolnujeme uzel, ktery nema zadne syny ani neni koren
+    } else {
+      item_ptr = stack_bst_pop(&stack);
+      if((&stack)->items[(&stack)->top]->right == item_ptr){
+        free(item_ptr);
+        item_ptr = stack_bst_pop(&stack);
+        item_ptr->right = NULL;
+      } else {
+        free(item_ptr);\
+        item_ptr = stack_bst_pop(&stack);
+        item_ptr->left = NULL;
+      }
+    }
+  }
 }
 
 /*
