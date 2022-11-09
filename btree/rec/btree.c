@@ -88,8 +88,16 @@ void bst_insert(bst_node_t **tree, char key, int value) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
-  bst_node_t *item_ptr;
-  
+
+  // Hledame rightmost
+  if((*tree)->right == NULL){
+    target->key = (*tree)->key;
+    target->value = (*tree)->value;
+    
+    *tree = NULL;
+  } else {
+    bst_replace_by_rightmost(target,&((*tree)->right));
+  }
 }
 
 /*
@@ -105,6 +113,7 @@ void bst_replace_by_rightmost(bst_node_t *target, bst_node_t **tree) {
  * použitia vlastných pomocných funkcií.
  */
 void bst_delete(bst_node_t **tree, char key) {
+  if()
 }
 
 /*

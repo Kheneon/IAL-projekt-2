@@ -14,10 +14,10 @@ Binary tree structure:
 
 
 [test_tree_search_root] Search in a single node tree (H)
-found: 21982
+found: 22026
 Binary tree structure:
 
-  +-[H,21982]
+  +-[H,22026]
 
 
 [test_tree_update_root] Update a node in a single node tree (H,1)->(H,8)
@@ -96,7 +96,7 @@ Binary tree structure:
         |  |
         +-[B,2]
            |
-           +-[A,21982]
+           +-[A,22026]
 
 
 [test_tree_search_missing] Search for a missing key (X)
