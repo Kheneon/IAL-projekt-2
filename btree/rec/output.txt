@@ -14,10 +14,10 @@ Binary tree structure:
 
 
 [test_tree_search_root] Search in a single node tree (H)
-found: 22026
+found: 1
 Binary tree structure:
 
-  +-[H,22026]
+  +-[H,1]
 
 
 [test_tree_update_root] Update a node in a single node tree (H,1)->(H,8)
@@ -96,7 +96,7 @@ Binary tree structure:
         |  |
         +-[B,2]
            |
-           +-[A,22026]
+           +-[A,1]
 
 
 [test_tree_search_missing] Search for a missing key (X)
@@ -196,8 +196,6 @@ Binary tree structure:
         |  +-[C,3]
         |  |
         +-[B,2]
-           |
-           +-[A,1]
 
 
 [test_tree_delete_left_subtree] Delete a node with only left subtree (R)
@@ -253,11 +251,9 @@ Binary tree structure:
                  |
               +-[S,10]
               |  |
-              |  +-[R,10]
+              |  +-[Q,10]
               |     |
-              |     +-[Q,10]
-              |        |
-              |        +-[P,10]
+              |     +-[P,10]
               |
            +-[O,16]
            |
@@ -337,9 +333,7 @@ Binary tree structure:
 
 Binary tree structure:
 
-                    +-[Y,10]
-                    |
-                 +-[X,10]
+                 +-[Y,10]
                  |
               +-[S,10]
               |  |
@@ -445,10 +439,8 @@ Binary tree structure:
         |  |
         |  +-[M,13]
         |
-     +-[L,12]
+     +-[K,11]
      |  |
-     |  |  +-[K,11]
-     |  |  |
      |  +-[J,10]
      |     |
      |     +-[I,9]
@@ -585,10 +577,8 @@ Binary tree structure:
      |     |
      |     +-[I,9]
      |
-  +-[H,8]
+  +-[G,7]
      |
-     |     +-[G,7]
-     |     |
      |  +-[F,6]
      |  |  |
      |  |  +-[E,5]
@@ -637,39 +627,11 @@ Binary tree structure:
 
 Binary tree structure:
 
-           +-[O,16]
-           |
-        +-[N,14]
-        |  |
-        |  +-[M,13]
-        |
-     +-[L,12]
-     |  |
-     |  |  +-[K,11]
-     |  |  |
-     |  +-[J,10]
-     |     |
-     |     +-[I,9]
-     |
-  +-[H,8]
-     |
-     |     +-[G,7]
-     |     |
-     |  +-[F,6]
-     |  |  |
-     |  |  +-[E,5]
-     |  |
-     +-[D,4]
-        |
-        |  +-[C,3]
-        |  |
-        +-[B,2]
-           |
-           +-[A,1]
+Tree is empty
 
 
 [test_tree_preorder] Traverse the tree using preorder
-
+[D,1][B,2][A,3][C,4][E,5]
 Binary tree structure:
 
      +-[E,5]
@@ -684,7 +646,7 @@ Binary tree structure:
 
 
 [test_tree_inorder] Traverse the tree using inorder
-
+[A,3][B,2][C,4][D,1][E,5]
 Binary tree structure:
 
      +-[E,5]
@@ -699,7 +661,7 @@ Binary tree structure:
 
 
 [test_tree_postorder] Traverse the tree using postorder
-
+[A,3][C,4][B,2][E,5][D,1]
 Binary tree structure:
 
      +-[E,5]
@@ -713,3 +675,4 @@ Binary tree structure:
         +-[A,3]
 
 
+24

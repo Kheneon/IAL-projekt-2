@@ -46,8 +46,9 @@ TEST(test_tree_search_root, "Search in a single node tree (H)")
 bst_init(&test_tree);
 bst_insert(&test_tree, 'H', 1);
 int result;
-bst_search(test_tree, 'H', &result);
-printf("found: %d\n", result); //TODO:
+bool yesno;
+yesno = bst_search(test_tree, 'H', &result);
+printf("found: %d\n", yesno); //TODO:
 bst_print_tree(test_tree);
 ENDTEST
 
@@ -196,4 +197,5 @@ int main(int argc, char *argv[]) {
   test_tree_preorder();
   test_tree_inorder();
   test_tree_postorder();
+  printf("%d\n",sizeof(struct bst_node));
 }

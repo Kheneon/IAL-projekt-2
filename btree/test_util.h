@@ -11,7 +11,7 @@
 
 #define ENDTEST                                                                \
   printf("\n");                                                                \
-  bst_dispose(&test_tree);                                                     \
+  bst_dispose(&test_tree);                                                    \
   }
 
 typedef enum direction { left, right, none } direction_t;
