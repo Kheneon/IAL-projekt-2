@@ -31,19 +31,16 @@ void bst_init(bst_node_t **tree) {
  * Funkciu implementujte rekurzívne bez použitia vlastných pomocných funkcií.
  */
 bool bst_search(bst_node_t *tree, char key, int *value) {
-  if(value != NULL){
-    if(tree == NULL){
-      return false;
-    } else if(tree->key == key){
-      *value = tree->value;
-      return true;
-    } else if(tree->key > key){
-      return bst_search(tree->left,key,value);
-    } else{
-      return bst_search(tree->right,key,value);
-    }
+  if(tree == NULL || value == NULL){
+    return false;
+  } else if(tree->key == key){
+    *value = tree->value;
+    return true;
+  } else if(tree->key > key){
+    return bst_search(tree->left,key,value);
+  } else{
+    return bst_search(tree->right,key,value);
   }
-  return false;
 }
 
 /*
