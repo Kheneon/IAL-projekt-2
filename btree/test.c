@@ -197,5 +197,5 @@ int main(int argc, char *argv[]) {
   test_tree_preorder();
   test_tree_inorder();
   test_tree_postorder();
-  printf("%d\n",sizeof(struct bst_node));
+  //printf("%d\n",sizeof(struct bst_node));
 }

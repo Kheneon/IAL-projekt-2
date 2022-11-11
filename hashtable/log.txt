@@ -1,0 +1,14 @@
+==512== Memcheck, a memory error detector
+==512== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==512== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==512== Command: ./test
+==512== Parent PID: 249
+==512== 
+==512== 
+==512== HEAP SUMMARY:
+==512==     in use at exit: 0 bytes in 0 blocks
+==512==   total heap usage: 196 allocs, 196 frees, 15,182 bytes allocated
+==512== 
+==512== All heap blocks were freed -- no leaks are possible
+==512== 
+==512== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

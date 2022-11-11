@@ -675,4 +675,3 @@ Binary tree structure:
         +-[A,3]
 
 
-24
