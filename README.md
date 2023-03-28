@@ -1,3 +1,3 @@
 # IAL-projekt-2
 
-hodnocení X/10
+hodnocení 9,8/10
